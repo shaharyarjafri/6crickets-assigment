@@ -1,303 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Camera Range Check</title>
-
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-pzjw8f+ua7Kw1TIq0txpD7rmI7iOtwQv9REcpVfeygjfflqsx3U8YxnDqKYb2TtS" crossorigin="anonymous">
-
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa;
-            padding-top: 20px;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #007bff;
-        }
-
-        .card-header {
-            background-color: #007bff;
-            color: white;
-            font-weight: bold;
-        }
-
-        .form-group label {
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .form-control {
-            border-radius: 8px;
-            padding: 10px;
-        }
-
-        .form-control:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-        }
-
-        .btn {
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-size: 16px;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-        }
-
-        .btn-secondary {
-            background-color: #6c757d;
-            border-color: #6c757d;
-        }
-
-        .camera-input {
-            margin-bottom: 20px;
-        }
-
-        .camera-input h5 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #007bff;
-        }
-
-        .result {
-            font-weight: bold;
-            color: green;
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .error {
-            font-weight: bold;
-            color: red;
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .warning {
-            font-weight: bold;
-            color: orange;
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            font-size: 14px;
-        }
+        body { font-family: Arial, sans-serif; background-color: #f8f9fa; padding-top: 20px; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+        .result { font-weight: bold; text-align: center; margin-top: 20px; }
+        .success { color: green; }
+        .error { color: red; }
     </style>
 </head>
-
 <body>
-
     <div class="container">
         <h1>Camera Range Check</h1>
-
-        <div class="card">
-            <div class="card-header">
-                Software Camera Requirements
-            </div>
-            <div class="card-body">
-                <div class="form-group">
-                    <label for="minDistance">Min Distance (m):</label>
-                    <input type="number" class="form-control" id="minDistance" placeholder="Min Distance">
-                </div>
-                <div class="form-group">
-                    <label for="maxDistance">Max Distance (m):</label>
-                    <input type="number" class="form-control" id="maxDistance" placeholder="Max Distance">
-                </div>
-                <div class="form-group">
-                    <label for="minLight">Min Light Level (lux):</label>
-                    <input type="number" class="form-control" id="minLight" placeholder="Min Light Level">
-                </div>
-                <div class="form-group">
-                    <label for="maxLight">Max Light Level (lux):</label>
-                    <input type="number" class="form-control" id="maxLight" placeholder="Max Light Level">
-                </div>
-            </div>
+        <div class="form-group">
+            <label>Min Distance:</label>
+            <input type="number" class="form-control" id="minDistance">
         </div>
-
-        <div class="card my-4">
-            <div class="card-header">
-                Hardware Camera Ranges (Enter each camera's data)
-            </div>
-            <div class="card-body" id="cameraInputs">
-                <div class="camera-input">
-                    <h5>Camera 1</h5>
-                    <div class="form-group">
-                        <label for="cam1MinDistance">Min Distance (m):</label>
-                        <input type="number" class="form-control" id="cam1MinDistance" placeholder="Min Distance">
-                    </div>
-                    <div class="form-group">
-                        <label for="cam1MaxDistance">Max Distance (m):</label>
-                        <input type="number" class="form-control" id="cam1MaxDistance" placeholder="Max Distance">
-                    </div>
-                    <div class="form-group">
-                        <label for="cam1MinLight">Min Light Level (lux):</label>
-                        <input type="number" class="form-control" id="cam1MinLight" placeholder="Min Light Level">
-                    </div>
-                    <div class="form-group">
-                        <label for="cam1MaxLight">Max Light Level (lux):</label>
-                        <input type="number" class="form-control" id="cam1MaxLight" placeholder="Max Light Level">
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer">
-                <button class="btn btn-secondary" onclick="addCameraInput()">Add Another Camera</button>
-            </div>
+        <div class="form-group">
+            <label>Max Distance:</label>
+            <input type="number" class="form-control" id="maxDistance">
         </div>
-
-        <button class="btn btn-primary btn-block" onclick="checkCameraRanges()">Check if Hardware Cameras are
-            Sufficient</button>
-
+        <div class="form-group">
+            <label>Min Light:</label>
+            <input type="number" class="form-control" id="minLight">
+        </div>
+        <div class="form-group">
+            <label>Max Light:</label>
+            <input type="number" class="form-control" id="maxLight">
+        </div>
+        <button class="btn btn-primary" onclick="addCameraInput()">Add Camera</button>
+        <div id="cameraInputs"></div>
+        <button class="btn btn-success mt-3" onclick="checkCameraRanges()">Check Cameras</button>
         <div id="result" class="result"></div>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zyyXViXH6b92pshX8f4ZG/tf0ksL1sq2hgkJk6Ar"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"
-        integrity="sha384-pzjw8f+ua7Kw1TIq0txpD7rmI7iOtwQv9REcpVfeygjfflqsx3U8YxnDqKYb2TtS"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
-        integrity="sha384-9gV2NAmCOl1DplOnFn5L5Eo1M5wEL5x+2Ej+6mRU+fBoTkDzYyNB7Fr6w0Op1wMj"
-        crossorigin="anonymous"></script>
-
     <script>
-        function isHardwareCameraSetSufficient(softwareCamera, hardwareCameras) {
-            const { minDistance, maxDistance, minLight, maxLight } = softwareCamera;
-
-            for (let i = 0; i < hardwareCameras.length; i++) {
-                const { minDistance: cameraMinDistance, maxDistance: cameraMaxDistance, minLight: cameraMinLight, maxLight: cameraMaxLight } = hardwareCameras[i];
-
-                // Check if this camera meets the software camera's requirements
-                if (
-                    cameraMinDistance <= maxDistance && cameraMaxDistance >= minDistance &&
-                    cameraMinLight <= maxLight && cameraMaxLight >= minLight
-                ) {
-                    return i + 1; // Return the camera number (1-based index)
-                }
-            }
-
-            return -1; // Return -1 if no camera is sufficient
-        }
-
-        // Function to add a new camera input form dynamically
         function addCameraInput() {
-            const cameraInputsDiv = document.getElementById('cameraInputs');
-            const cameraIndex = cameraInputsDiv.children.length + 1;
-
-            const newCameraInput = document.createElement('div');
-            newCameraInput.classList.add('camera-input');
-            newCameraInput.innerHTML = `
-        <h5>Camera ${cameraIndex}</h5>
-        <div class="form-group">
-            <label for="cam${cameraIndex}MinDistance">Min Distance (m):</label>
-            <input type="number" class="form-control" id="cam${cameraIndex}MinDistance" placeholder="Min Distance">
-        </div>
-        <div class="form-group">
-            <label for="cam${cameraIndex}MaxDistance">Max Distance (m):</label>
-            <input type="number" class="form-control" id="cam${cameraIndex}MaxDistance" placeholder="Max Distance">
-        </div>
-        <div class="form-group">
-            <label for="cam${cameraIndex}MinLight">Min Light Level (lux):</label>
-            <input type="number" class="form-control" id="cam${cameraIndex}MinLight" placeholder="Min Light Level">
-        </div>
-        <div class="form-group">
-            <label for="cam${cameraIndex}MaxLight">Max Light Level (lux):</label>
-            <input type="number" class="form-control" id="cam${cameraIndex}MaxLight" placeholder="Max Light Level">
-        </div>
-    `;
-            cameraInputsDiv.appendChild(newCameraInput);
+            const div = document.createElement("div");
+            const index = document.querySelectorAll(".camera-input").length + 1;
+            div.classList.add("camera-input");
+            div.innerHTML = `
+                <h5>Camera ${index}</h5>
+                <input type="number" placeholder="Min Distance" class="form-control cam-min-distance">
+                <input type="number" placeholder="Max Distance" class="form-control cam-max-distance">
+                <input type="number" placeholder="Min Light" class="form-control cam-min-light">
+                <input type="number" placeholder="Max Light" class="form-control cam-max-light">
+            `;
+            document.getElementById("cameraInputs").appendChild(div);
         }
 
-        // Function to validate inputs and check camera ranges
         function checkCameraRanges() {
-            const softwareCamera = {
-                minDistance: parseInt(document.getElementById('minDistance').value, 10),
-                maxDistance: parseInt(document.getElementById('maxDistance').value, 10),
-                minLight: parseInt(document.getElementById('minLight').value, 10),
-                maxLight: parseInt(document.getElementById('maxLight').value, 10),
-            };
+            const minD = parseInt(document.getElementById("minDistance").value, 10);
+            const maxD = parseInt(document.getElementById("maxDistance").value, 10);
+            const minL = parseInt(document.getElementById("minLight").value, 10);
+            const maxL = parseInt(document.getElementById("maxLight").value, 10);
 
-            // Validate software camera inputs
-            if (
-                isNaN(softwareCamera.minDistance) || isNaN(softwareCamera.maxDistance) ||
-                isNaN(softwareCamera.minLight) || isNaN(softwareCamera.maxLight)
-            ) {
-                displayResult("Please fill in all software camera fields properly.", "error");
-                return;
-            }
-
-            const hardwareCameras = [];
-            const cameraInputs = document.querySelectorAll('.camera-input');
-
-            // Collect hardware camera data
-            for (let i = 0; i < cameraInputs.length; i++) {
-                const camMinDistance = parseInt(document.getElementById(`cam${i + 1}MinDistance`).value, 10);
-                const camMaxDistance = parseInt(document.getElementById(`cam${i + 1}MaxDistance`).value, 10);
-                const camMinLight = parseInt(document.getElementById(`cam${i + 1}MinLight`).value, 10);
-                const camMaxLight = parseInt(document.getElementById(`cam${i + 1}MaxLight`).value, 10);
-
-                // Validate hardware camera inputs
-                if (
-                    isNaN(camMinDistance) || isNaN(camMaxDistance) ||
-                    isNaN(camMinLight) || isNaN(camMaxLight)
-                ) {
-                    displayResult(`Please fill in all fields for Camera ${i + 1}.`, "error");
-                    return;
+            let validCameras = [];
+            document.querySelectorAll(".camera-input").forEach((cam, index) => {
+                const camMinD = parseInt(cam.querySelector(".cam-min-distance").value, 10);
+                const camMaxD = parseInt(cam.querySelector(".cam-max-distance").value, 10);
+                const camMinL = parseInt(cam.querySelector(".cam-min-light").value, 10);
+                const camMaxL = parseInt(cam.querySelector(".cam-max-light").value, 10);
+                
+                if (camMinD >= minD && camMaxD <= maxD && camMinL >= minL && camMaxL <= maxL) {
+                    validCameras.push(index + 1);
                 }
-
-                hardwareCameras.push({
-                    minDistance: camMinDistance,
-                    maxDistance: camMaxDistance,
-                    minLight: camMinLight,
-                    maxLight: camMaxLight,
-                });
-            }
-
-            const capableCameraIndex = isHardwareCameraSetSufficient(softwareCamera, hardwareCameras);
-
-            if (capableCameraIndex !== -1) {
-                displayResult(`The hardware cameras are sufficient for the software camera requirements. Camera ${capableCameraIndex} is capable.`, "success");
+            });
+            
+            const resultDiv = document.getElementById("result");
+            if (validCameras.length > 0) {
+                resultDiv.className = "result success";
+                resultDiv.textContent = `Cameras that meet the requirements: ${validCameras.join(", ")}`;
             } else {
-                displayResult("The hardware cameras do not meet the software camera requirements.", "error");
+                resultDiv.className = "result error";
+                resultDiv.textContent = "No hardware cameras meet the software camera requirements.";
             }
         }
-
-        // Function to display result
-        function displayResult(message, type) {
-            const resultDiv = document.getElementById('result');
-            resultDiv.classList.remove('success', 'error', 'warning');
-            resultDiv.classList.add(type);
-            resultDiv.textContent = message;
-        }
-
     </script>
-
 </body>
-
 </html>
